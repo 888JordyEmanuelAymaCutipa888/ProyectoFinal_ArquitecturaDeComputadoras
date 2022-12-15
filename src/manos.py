@@ -1,3 +1,4 @@
+#import keyboardManage
 import math 
 import cv2
 import mediapipe as mp
@@ -58,6 +59,7 @@ with mp_hands.Hands(
             print("estado1")
             #SE ACTIVA EL ZOOM
             estado2 = True 
+            #keyboardManage.hacerZoom()
 
         if distancia> 0 and distancia < 25 :
             print("estado1")
