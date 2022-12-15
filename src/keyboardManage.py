@@ -7,5 +7,8 @@ def hacerZoom():
     keyboard.release("ctrl")
     return;
 
+def hacerMim():
+    keyboard.press_and_release("ctrl+-")  
+    return;
 
-hacerZoom()
+
