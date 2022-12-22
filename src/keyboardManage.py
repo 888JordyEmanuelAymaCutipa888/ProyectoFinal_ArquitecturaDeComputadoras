@@ -11,4 +11,12 @@ def hacerMim():
     keyboard.press_and_release("ctrl+-")  
     return;
 
+def subirPagina():  
+    keyboard.press_and_release("up")
+    return;
+
+def bajarPagina():  
+    keyboard.press_and_release("down")
+    return;
+
 

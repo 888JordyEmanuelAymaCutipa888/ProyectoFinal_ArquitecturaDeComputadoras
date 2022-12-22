@@ -7,7 +7,8 @@ class Gestos:
 
     def __init__(self):
         self.activate = True
-        self.preparandoSalir = False
+        self.preparandoSalir = False #Condicional para cerrar el programa
+        self.ubicacionInicio = None #Para bajar y subir
 
     def pasarDatos(self, frame, hand_landmarks, mp_hands, height, width) :
         self.frame = frame
@@ -76,6 +77,42 @@ class Gestos:
                 print("demasiadoJutnos para hacer Zoom")
                 print("demasiadoJutnos para hacer Zoom")
 
+
+    def moverUpDown(self):
+
+        if not self.preparandoSalir : 
+            #Captrura posicion inicial de dedos medio e indice
+            Xmedio, Ymedio = f.obtenerPosicion(self.height, self.width,self.hand_landmarks, self.mp_hands, "MIDDLE_FINGER_TIP");
+            Xindice, Yindice = f.obtenerPosicion(self.height, self.width, self.hand_landmarks, self.mp_hands, "INDEX_FINGER_TIP");
+
+            #Dibujamos los puntos
+            cv2.circle(self.frame, (Xmedio, Ymedio), 3, (255,0,0), 3)
+            cv2.circle(self.frame, (Xindice, Yindice), 3, (255,0,0), 3)
+
+            #Actualizar posiciones
+            if self.ubicacionInicio == None :
+                self.ubicacionInicio = [Xmedio, Ymedio];
+
+            #Hallamos distnacia entre posInicial y la nueva
+            if not self.ubicacionInicio == None :
+                posInicioX, posInicioY = self.ubicacionInicio;
+                #Verificamos que se desplaza hacia abjo por medio de sus coordenadsas
+                distancia = f.hallarDistancia(posInicioX,posInicioY,Xmedio,Ymedio);
+                print("Coorrdenads de Inicio son : " +  str(posInicioX) +" ,  " + str(posInicioY))
+                print("Coorrdenads de Inicio son : " +  str(posInicioX) +" ,  " + str(posInicioY))
+                print("La distnacia es ", distancia)
+                print("La distnacia es ", distancia)
+                
+                distanciaDedos =  f.hallarDistancia(Xmedio, Ymedio, Xindice, Yindice);
+
+                #Verifica si los dedos estan por arriba de la ubicacion inicial
+                if posInicioY <= Ymedio and (0 < distanciaDedos and distanciaDedos <  30):
+                    if  distancia > 60:
+                        k.subirPagina();
+                if posInicioY > Ymedio and (0 < distanciaDedos and distanciaDedos <  30):
+                    if  distancia > 30:
+                        k.bajarPagina();
+            
 
     def cerrarPrograma(self):
 

@@ -49,17 +49,15 @@ def iniciarReconocimiento():
                 print("No ha manosossssssssss")
                 print("No ha manosossssssssss")
                 gesto.preparandoSalir = False;
+                gesto.ubicacionInicio = None
 
             if results.multi_hand_landmarks is not None:
                 for hand_landmarks in results.multi_hand_landmarks:
-                    
-                    
-                    #hacerZoom(frame, hand_landmarks, mp_hands, height, width, informacionZoom)
+                    #Pasamos datos que sirven para el reconocimiento
                     gesto.pasarDatos(frame, hand_landmarks, mp_hands, height, width)
-                    gesto.hacerZoom()
-                    gesto.cerrarPrograma()
-
-                    #bandera = cerrarPrograma(frame, hand_landmarks, mp_hands, height, width, informacionCerrar)
+                    #gesto.hacerZoom()
+                    #gesto.cerrarPrograma()
+                    gesto.moverUpDown();
             
             cv2.imshow('Frame',frame)
 
