@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import ImageTk
 from PIL import Image
 import manos
+import os
 
 class App:
     def __init__(self, root):
@@ -20,21 +21,16 @@ class App:
         initFrame.pack();
 
         #Imagen Logo
-        imgLogo = Image.open("img/logo.png")
+        rutaImagen = os.getcwd() + "/src/img/logo.png";
+        imgLogo = Image.open(os.getcwd() + "/src/img/logo.png")
         imgLogo = imgLogo.resize((200,200),Image.Resampling.LANCZOS)
         imagen = ImageTk.PhotoImage(imgLogo)
         label_img = Label(initFrame, image= imagen, bg="#FCFC43")
         label_img.image = imagen;
         label_img.place(x=220,y=50)
 
-        #Agregamos fondo
-        # miFondo = PhotoImage(file="img/fondo.png")
-        # my_canvas = Canvas(root,width=600, height=500)
-        # my_canvas.pack(fill="both" ,expand=True)
-        # my_canvas.create_image(0,0,image = miFondo,anchor="nw")
-
         #Boton para Iniciar App
-        btnIniciar=Button(initFrame, command= manos.zoomInteligente)
+        btnIniciar=Button(initFrame, command= manos.iniciarReconocimiento)
         btnIniciar["text"] = "Iniciar"
         btnIniciar["bg"] = "#007df4"
         btnIniciar["fg"] = "#ffffff"
