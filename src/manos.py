@@ -75,11 +75,11 @@ def zoomInteligente():
 
                 
                 
-                if distancia> 0 and distancia < 25 :
+                if distancia> 0 and distancia < 30 :
                     print("estado1")
                     estado1 = True 
 
-                if distancia >= 150 and estado1 == True and contador < 1:
+                if distancia >= 100 and estado1 == True and contador < 1:
                     print("estado1")
                     #SE ACTIVA EL ZOOM
                     estado2 = True
@@ -89,7 +89,7 @@ def zoomInteligente():
                     k.hacerZoom();
 
 
-                if estado1 == True and estado2 == True and distancia < 150:
+                if estado1 == True and estado2 == True and distancia < 100:
                     estado1 = False 
                     estado2 = False 
                     k.hacerMim();
