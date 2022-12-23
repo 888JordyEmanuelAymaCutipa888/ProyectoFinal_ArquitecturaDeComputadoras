@@ -1,24 +1,57 @@
+import funcionesMatematicas as fm
 import math
 class gesto(): 
 
-    enProceso = False 
-    ejecutar = False
+    def __init__(self):
+        self.activate = True
+        self.preparandoSalir = False #Condicional para cerrar el programa
+        self.ubicacionInicio = None #Para bajar y subir
+        self.estado1 = False 
+        self.estado2 = False 
+        self.posM = -1 
+        self.posI = -1
+        self.enProceso = None
+        self.gestosRegistros = ['deslizarAbajo'] #
+        self.fotogramas = 0
+        self.descanso = 0
 
-    posM = -1 
-    posI = -1
-
-    estado1 = False 
-    estado2 = False 
-
-    fotogramas = 0
-    descanso = 0
+    def pasarDatos(self, frame, hand_landmarks, mp_hands, height, width) :
+        self.frame = frame
+        self.hand_landmarks = hand_landmarks
+        self.mp_hands = mp_hands
+        self.height = height
+        self.width = width
 
 
-    def actualizarEstado(self, hand_landmarks, mp_hands, height, width):
-        pIndice = obtenerPosicion(height, width, hand_landmarks, mp_hands, "INDEX_FINGER_TIP")
-        pMidle = obtenerPosicion(height, width, hand_landmarks, mp_hands, "MIDDLE_FINGER_TIP")
+    ##########Prohibe la sincronización de gestos###############
+
+    def controladorGestos(self):
+        if(self.gestoEnProceso == None):
+            print("a")
+            for gesto in enumerate(self.gestosRegistros):
+                self.gestoEnProceso = self.realizarGesto(gesto[1])()
+                if(self.gestoEnProceso != None):
+                    break
+        else:
+            print(self.gestoEnProceso)
+            self.realizarGesto(self.gestoEnProceso)()
+            
+
+    def realizarGesto(self,gesto): 
+        return {
+                'deslizarAbajo' : lambda: self.deslizarAbajo(),
+                }.get(gesto, lambda:None)
+
+    #############################################################
+
+
+
+    def deslizarAbajo(self):
+        pIndice = obtenerPosicion(self.height, self.width, self.hand_landmarks, self.mp_hands, "INDEX_FINGER_TIP")
+        pMidle = obtenerPosicion(self.height, self.width, self.hand_landmarks, self.mp_hands, "MIDDLE_FINGER_TIP")
         dMidle = self.posM - pMidle[1]
         dIndice = self.posI - pIndice[1]
+
         print ("===============")
         print("DATOOOS")
         print("FOTOGRAMAS" and self.fotogramas)
@@ -37,9 +70,10 @@ class gesto():
             self.posM = pMidle[1]
             self.estado1 = True
             self.enProceso = True
+
         if(self.estado1 == True and distancia < 35 and self.estado2 == False
                 and dIndice > 10 and dMidle > 10):
-            self.estado2 = True;
+            self.estado2 = True
             #ejecutar
             print("deslizar hacia abajo____________________________________________________________--")
             print("deslizar hacia abajo")
@@ -52,7 +86,16 @@ class gesto():
             self.descanso = self.descanso +1
         
         if(self.fotogramas > 25 or (self.estado2 == True and self.descanso > 5)):
-            self.reiniciar();
+            self.reiniciar()
+            self.enProceso = None
+
+    def zoom(self):
+        Indice = obtenerPosicion(self.height, self.width, self.hand_landmarks, self.mp_hands, "INDEX_FINGER_TIP")
+        Midle = obtenerPosicion(self.height, self.width, self.hand_landmarks, self.mp_hands, "MIDDLE_FINGER_TIP")
+        distanciaPulgarIndice = hallarDistancia()
+        pass
+
+
 
     def reiniciar(self):
         self.enProceso = False
@@ -68,8 +111,9 @@ class gesto():
         self.descanso = 0
 
 
+
 #################FUNCIONES
-def obtenerPosicion( height, width, hand_landmarks, mp_hands, nombrePunto):
+def obtenerPosicion(height, width, hand_landmarks, mp_hands, nombrePunto):
     #UBICACIONES DE LA PUNTA DE LOS DEDOS:  PULGAR E INDICE
     posX = int(hand_landmarks.landmark[mp_hands.HandLandmark[nombrePunto]].x*width)
     posY = int(hand_landmarks.landmark[mp_hands.HandLandmark[nombrePunto]].y*height)
