@@ -9,6 +9,8 @@ class Gestos:
         self.activate = True
         self.preparandoSalir = False #Condicional para cerrar el programa
         self.ubicacionInicio = None #Para bajar y subir
+        self.gestosRegistros = ['hacerZoom', 'moverUpDown', 'cerrarPrograma'] ####++++
+        self.gestoEnProceso = None ####++++
 
     def pasarDatos(self, frame, hand_landmarks, mp_hands, height, width) :
         self.frame = frame
@@ -16,6 +18,33 @@ class Gestos:
         self.mp_hands = mp_hands
         self.height = height
         self.width = width
+
+    ##########Prohibe la sincronización de gestos###############
+
+    def controladorGestos(self):
+        if(self.gestoEnProceso == None):
+            print("a")
+            for gesto in enumerate(self.gestosRegistros):
+                self.gestoEnProceso = self.realizarGesto(gesto[1])()
+                if(self.gestoEnProceso != None):
+                    break
+        else:
+            print(self.gestoEnProceso)
+            self.realizarGesto(self.gestoEnProceso)()
+            
+
+    def realizarGesto(self,gesto): 
+        return {
+                'hacerZoom' : lambda: self.hacerZoom(),
+                'moverUpDown' : lambda: self.moverUpDown(),
+                'cerrarPrograma' : lambda: self.cerrarPrograma(),
+                }.get(gesto, lambda:None)
+
+    #############################################################
+
+
+    
+
 
     def hacerZoom(self):
         if not self.preparandoSalir : 
@@ -55,11 +84,13 @@ class Gestos:
                 #informacionZoom["estanJuntos"] == False
                 sleep(.4)
                 k.hacerZoom();
+                self.enProceso = 'hacerZoom'
 
             if 40 <  distancia and distancia < 110:
                 #Si distncai esta entre el intervalo de 20 y 110 -> minimiza
                 sleep(.4)
                 k.hacerMim();
+                self.enProceso = 'hacerZoom'
                 print("Hacer MIIIIIIM")
                 print("Hacer MIIIIIIM")
                 print("Hacer MIIIIIIM")
@@ -76,6 +107,8 @@ class Gestos:
                 print("demasiadoJutnos para hacer Zoom")
                 print("demasiadoJutnos para hacer Zoom")
                 print("demasiadoJutnos para hacer Zoom")
+                self.enProceso = None
+
 
 
     def moverUpDown(self):
@@ -91,6 +124,7 @@ class Gestos:
 
             #Actualizar posiciones
             if self.ubicacionInicio == None :
+                self.enProceso = 'moverUpDown'
                 self.ubicacionInicio = [Xmedio, Ymedio];
 
             #Hallamos distnacia entre posInicial y la nueva
@@ -109,9 +143,11 @@ class Gestos:
                 if posInicioY <= Ymedio and (0 < distanciaDedos and distanciaDedos <  30):
                     if  distancia > 60:
                         k.subirPagina();
-                if posInicioY > Ymedio and (0 < distanciaDedos and distanciaDedos <  30):
+                elif posInicioY > Ymedio and (0 < distanciaDedos and distanciaDedos <  30):
                     if  distancia > 30:
                         k.bajarPagina();
+                else:
+                    self.enProceso = None
             
 
     def cerrarPrograma(self):
@@ -128,6 +164,8 @@ class Gestos:
         #Verificar si estan juntos
         if 0 < distancia and distancia < 15:
             self.preparandoSalir =True
+            self.enProceso = 'cerrarPrograma'
+
             print("Preprando para cerrarr")
             print("Preprando para cerrarr")
             print("Preprando para cerrarr")

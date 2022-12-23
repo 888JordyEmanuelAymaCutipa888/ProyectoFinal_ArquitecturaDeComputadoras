@@ -55,6 +55,7 @@ def iniciarReconocimiento():
                 for hand_landmarks in results.multi_hand_landmarks:
                     #Pasamos datos que sirven para el reconocimiento
                     gesto.pasarDatos(frame, hand_landmarks, mp_hands, height, width)
+                    gesto.controladorGestos()
                     #gesto.hacerZoom()
                     #gesto.cerrarPrograma()
                     gesto.moverUpDown();
@@ -67,5 +68,4 @@ def iniciarReconocimiento():
     cv2.destroyAllWindows()
 
 
-
-
+iniciarReconocimiento()
