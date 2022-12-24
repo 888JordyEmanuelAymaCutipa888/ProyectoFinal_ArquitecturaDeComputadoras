@@ -11,4 +11,7 @@ def hacerMim():
     keyboard.press_and_release("ctrl+-")  
     return;
 
-
+def bajarPagina(k):  
+    for i in range(k):
+        keyboard.press_and_release("down")
+    return;
