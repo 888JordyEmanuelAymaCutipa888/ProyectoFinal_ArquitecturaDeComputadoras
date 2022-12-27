@@ -4,11 +4,10 @@ import cv2
 import mediapipe as mp
 import keyboardManage as k
 
-def zoomInteligente():
+def iniciarReconocimiento():
 
         mp_drawing = mp.solutions.drawing_utils
         mp_hands = mp.solutions.hands
-
 
         cap = cv2.VideoCapture(0)
 
@@ -29,7 +28,7 @@ def zoomInteligente():
             gestos  = Gestos()
             ##########ContraladorGEstos
 
-            while boton:
+            while gestos.activate:
                 #bonton = interfaz
                 ret, frame = cap.read()
                 if ret == False:
@@ -49,22 +48,10 @@ def zoomInteligente():
                 if results.multi_hand_landmarks is not None:
                     for hand_landmarks in results.multi_hand_landmarks:
 
-
-                        #se obtienen las ubicaciones con HandLandmarks
-                        #UBICACIONES DE LA PUNTA DE LOS DEDOS:  PULGAR E INDICE
-                        Xpulgar = int(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].x*width)
-                        Ypulgar = int(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y*height)
-                        
-                        Xindice = int(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x*width)
-                        Yindice = int(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y*height)
-
                         #####GESTOS
                         gestos.pasarDatos(frame, hand_landmarks, mp_hands, height, width)
                         gestos.controladorGestos()
                         #####
-
-                        cv2.circle(frame, (Xpulgar, Ypulgar), 3, (255,0,0), 3)
-                        cv2.circle(frame, (Xindice, Yindice), 3, (255,0,0), 3)
 
                 ####Se visualiza la imagen
                 cv2.imshow('Frame',frame)
@@ -72,6 +59,3 @@ def zoomInteligente():
                     break
         cap.release()
         cv2.destroyAllWindows()
-
-
-zoomInteligente()

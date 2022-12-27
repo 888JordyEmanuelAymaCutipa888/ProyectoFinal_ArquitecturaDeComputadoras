@@ -2,6 +2,7 @@ from tkinter import *
 from PIL import ImageTk
 from PIL import Image
 import manos
+import os
 
 class App:
     def __init__(self, root):
@@ -34,7 +35,7 @@ class App:
         # my_canvas.create_image(0,0,image = miFondo,anchor="nw")
 
         #Boton para Iniciar App
-        btnIniciar=Button(initFrame, command= manos.zoomInteligente)
+        btnIniciar=Button(initFrame, command= manos.iniciarReconocimiento)
         btnIniciar["text"] = "Iniciar"
         btnIniciar["bg"] = "#007df4"
         btnIniciar["fg"] = "#ffffff"
